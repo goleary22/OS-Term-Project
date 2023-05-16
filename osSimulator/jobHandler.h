@@ -8,6 +8,9 @@ handle jobs as they arrive
 #include <vector>
 #include "processHandler.h"
 
+//job and process basically the same, kind of just repeating
+//He suggests using the job struct for everything and passing that through the queues. 
+//CPU should be a queue that only ever has one thing on it 
 
 // The following structs are used to represent jobs and devices.
 struct Job {

@@ -225,10 +225,11 @@ void processQueues() {
         if ((ReadyQueue.size() == 0) & (WaitQueue.size() > 0)) {
             for (int i = 0; i < WaitQueue.size(); i++) {
                 Process process = WaitQueue[i];
+                //Need to switch this to checking how many devices we have and then comparing if there are enough ad if its safe. 
                 // if the job has not requested a device yet
                 //Getting stuck here? changed from == 0 to > 0 but stuck in infinite loop
                 //i increases each time so it never hits 0
-                if (process.device_requirement == 0) {
+                if (process.device_requirement) {
                     // find the device in the devices vector
                     Device device;
                     for (int i = 0; i < devices.size(); i++) {

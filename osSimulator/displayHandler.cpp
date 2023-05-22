@@ -81,7 +81,7 @@ void handle_display_event(
     // print the pid, state, time slice, run time, memory requirement, device requirement, finished, start time, turnaround time, and waiting time for each process
     for (int i = 0; i < CompleteQueue.size(); i++) {
         Process process = CompleteQueue[i];
-       std::cout<< process.pid << "\t" << process.state << "\t" << process.time_slice << "\t\t" << process.run_time << "\t\t" << process.memory_requirement << "\t\t\t" << process.device_requirement << "\t\t\t" << process.finished << "\t\t" << process.start_time << "\t\t" << process.turnaround_time << "\t\t" << process.waiting_time <<std::endl;
+       std::cout<< process.pid << "\t" << process.finished_time << "\t" << process.start_time << "\t\t" << process.turnaround_time << "\t\t" << process.memory_requirement << "\t\t\t" << process.device_requirement << "\t\t\t" << process.finished << "\t\t" << process.start_time << "\t\t" << process.turnaround_time << "\t\t" << process.waiting_time <<std::endl;
     }
 
    std::cout<< "Submitted Jobs:" <<std::endl;

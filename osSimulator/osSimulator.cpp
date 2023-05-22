@@ -226,7 +226,8 @@ void processQueues() {
             for (int i = 0; i < WaitQueue.size(); i++) {
                 Process process = WaitQueue[i];
                 // if the job has not requested a device yet
-                //Getting stuck here?
+                //Getting stuck here? changed from == 0 to > 0 but stuck in infinite loop
+                //i increases each time so it never hits 0
                 if (process.device_requirement == 0) {
                     // find the device in the devices vector
                     Device device;
@@ -250,6 +251,24 @@ void processQueues() {
                     }
                 }
             }
+            /* for (int i = 0; i < WaitQueue.size(); i++){
+                Process process = WaitQueue[i];
+                
+                Banker’s algorithm is executed in FIFO order on each job in the Wait Queue to determine if any 
+                jobs in the Wait Queue can be allocated its last request of devices. If necessary, the entire 
+                Wait Queue is checked to restart as many jobs as possible.
+                n = # of processes, m = # of resource types
+                available = vector of length m, # of avil resources of each type
+                max = n x m matrix, defines maximum demand of each process
+                allocation = n x m matrix, defines number of resources of each type currently allocated to each process
+                need = n x m matrix, indicates the remaining resource need of each process
+                for bankers: you need to have max and allocated resources of each process
+                with this, find the need = max - allocation 
+                int totalAllocated = 0;
+                for(int i = 0; i < WaitQueue.size(); i++){
+                    process.device_requirement[i] = process.
+                }
+            } */
         }
 
 

@@ -19,4 +19,6 @@ void handle_device_request_event(int time, int job_id, int device);
 // The following function is used to handle device release events.
 void handle_device_release_event(int time, int job_id, int device);
 
+
+
 #endif /* DEVICEHANDLER_H */

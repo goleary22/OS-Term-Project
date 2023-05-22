@@ -49,5 +49,6 @@ void handle_job_arrival_event(
 );
 Process createProcessFromJob(const Job job, int available_memory);
 
+int getTotalDevices();
 
 #endif /* OSSIMULATOR_H */

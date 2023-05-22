@@ -159,6 +159,18 @@ void processInstruction(std::string instruction) {
     current_time++;
 
 }
+
+int getTotalDevices(){
+    int totalDevices = 0;
+    for (int i = 0; i < ReadyQueue.size(); i++) {
+        totalDevices = totalDevices + ReadyQueue[i].device_requirement;
+    }
+    return totalDevices;
+}
+
+
+
+
 //Round Robin at the end of time limit, move head to the back, make next one head
 void processQueues() {
     bool system_active = true;
@@ -169,11 +181,14 @@ void processQueues() {
             // if there are jobs in the ready queue
             if (ReadyQueue.size() > 0) {
                 // set the CPU to the first job in the ready queue
-                CPU = ReadyQueue[0];
-                current_time++;
-                CPU.start_time = current_time;
-                ReadyQueue.erase(ReadyQueue.begin());
-                WaitQueue.push_back(CPU);
+                    if(CPU.device_requirement <= available_devices){
+                        CPU = ReadyQueue[0];
+                        available_devices = available_devices - CPU.device_requirement;
+                        current_time++;
+                        CPU.start_time = current_time;
+                        ReadyQueue.erase(ReadyQueue.begin());
+                    }
+                    
             }
         }
         // if the CPU is busy
@@ -209,6 +224,7 @@ void processQueues() {
              if (CPU.run_time > 0){
                 // move this job to the wait queue
                 WaitQueue.push_back(CPU);
+                available_devices += CPU.device_requirement;
                 // set the CPU to the next job in the ready queue
                 if (ReadyQueue.size() > 0) {
                     CPU = ReadyQueue[0];
@@ -222,34 +238,18 @@ void processQueues() {
 
         // if the wait queue is not empty
         // Loop through the wait queue and find the first job that can be allocated a device
-        if ((ReadyQueue.size() == 0) & (WaitQueue.size() > 0)) {
+        if (WaitQueue.size() > 0) {
             for (int i = 0; i < WaitQueue.size(); i++) {
                 Process process = WaitQueue[i];
                 //Need to switch this to checking how many devices we have and then comparing if there are enough ad if its safe. 
                 // if the job has not requested a device yet
                 //Getting stuck here? changed from == 0 to > 0 but stuck in infinite loop
                 //i increases each time so it never hits 0
-                if (process.device_requirement) {
+                if (process.device_requirement <= available_devices - getTotalDevices()) {
                     // find the device in the devices vector
-                    Device device;
-                    for (int i = 0; i < devices.size(); i++) {
-                        if (devices[i].device_id == process.device_requirement) {
-                            device = devices[i];
-                            break;
-                        }
-                    }
                     // if the device is available
-                    if (device.number_of_available_devices > 0) {
-                        // decrement the number of available devices
-                        device.number_of_available_devices--;
-                        // set the job's device requirement to the device
-                        process.device_requirement = device.device_id;
-                        // remove the job from the wait queue
-                        WaitQueue.erase(WaitQueue.begin() + i);
-                        // put the job in the ready queue
-                        ReadyQueue.push_back(process);
-                        break;
-                    }
+                    ReadyQueue.push_back(process);
+                    WaitQueue.erase(WaitQueue.begin()+i)
                 }
             }
             /* for (int i = 0; i < WaitQueue.size(); i++){
@@ -369,12 +369,13 @@ void handle_job_arrival_event(
     if (job.memory_requirement  > available_memory) {
 
         if (job.priority == 1) {
-            // use addSorted to put the job_node in HoldQueue1
-            HoldQueue1.add(job);
+            // use addSorted to put the job_node in HoldQueue1 for Shortest Job First
+            HoldQueue1.addSorted(job, job.run_time);
+            
         }
         // if the job's priority is 2
         if (job.priority == 2) {
-            // put the job in Hold Queue 2
+            // put the job in Hold Queue 2 for FIFO
             HoldQueue2.add(job);
         }
     }

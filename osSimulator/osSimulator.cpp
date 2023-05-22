@@ -159,7 +159,7 @@ void processInstruction(std::string instruction) {
     current_time++;
 
 }
-//Round Robin
+//Round Robin at the end of time limit, move head to the back, make next one head
 void processQueues() {
     bool system_active = true;
     while (system_active){
@@ -173,6 +173,7 @@ void processQueues() {
                 current_time++;
                 CPU.start_time = current_time;
                 ReadyQueue.erase(ReadyQueue.begin());
+                WaitQueue.push_back(CPU);
             }
         }
         // if the CPU is busy
@@ -205,25 +206,27 @@ void processQueues() {
                 }   
             }
             
-            if (CPU.run_time > 0){
+             if (CPU.run_time > 0){
                 // move this job to the wait queue
                 WaitQueue.push_back(CPU);
                 // set the CPU to the next job in the ready queue
                 if (ReadyQueue.size() > 0) {
                     CPU = ReadyQueue[0];
                     ReadyQueue.erase(ReadyQueue.begin());
+                    CPU.run_time = CPU.run_time;
                 } else {
                     CPU.pid = -1;
                 }   
-            }
+            } 
         }
 
         // if the wait queue is not empty
         // Loop through the wait queue and find the first job that can be allocated a device
-        if (WaitQueue.size() > 0) {
+        if ((ReadyQueue.size() == 0) & (WaitQueue.size() > 0)) {
             for (int i = 0; i < WaitQueue.size(); i++) {
                 Process process = WaitQueue[i];
                 // if the job has not requested a device yet
+                //Getting stuck here?
                 if (process.device_requirement == 0) {
                     // find the device in the devices vector
                     Device device;

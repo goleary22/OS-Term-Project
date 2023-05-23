@@ -52,96 +52,57 @@ D 9999
 
 
 ## Output:
-**Note that actual outputs do not match expected
+**Note that actual outputs do not match expected, see report for full output
 
-O0: 
+**O0: 
+
 At Time: 9999
+
 Available Main Memory: 130
+
 Current Devices: 16
-Process running on CPU:
-Job ID  Waiting Time    Time Left
-------- ------------    ---------
--1      2               26
-Hold Queue 1:
-Job ID  Run Time
-------  --------
 
-Hold Queue 2:
-Job ID  Run Time
-------  --------
+Process running on CPU: Job ID = -1, Waiting Time = 2, Time left = 26
 
-Ready Queue:
-Job ID  Run Time        Waiting Time
-------- --------        -------------
-Wait Queue:
-Job ID  Run Time        Waiting Time
-------  ---------       ------------
 Completed Jobs:
-Job ID  Arrival Time    Finish Time     Turnaround Time
-------- ------------    -----------     ---------------
-3       17              18              1
-6       23              24              1
-4       25              26              1
+Job ID = 3, Arrival Time = 17, Finish Time = 18, Turnaround Time = 1
+Job ID = 6, Arrival Time = 23, Finish Time = 24, Turnaround Time = 1
+Job ID = 4, Arrival Time = 25, Finish Time = 26, Turnaround Time = 1
+
 System Turnaround Time: 1
 
 
-O1:
+**O1:
+
 At Time: 9999
+
 Available Main Memory: 170
+
 Current Devices: 12
-Process running on CPU:
-Job ID  Waiting Time    Time Left
-------- ------------    ---------
--1      3               18
-Hold Queue 1:
-Job ID  Run Time
-------  --------
 
-Hold Queue 2:
-Job ID  Run Time
-------  --------
+Process running on CPU: Job ID = -1, Waiting Time = 3, Time left = 18
 
-Ready Queue:
-Job ID  Run Time        Waiting Time
-------- --------        -------------
-Wait Queue:
-Job ID  Run Time        Waiting Time
-------  ---------       ------------
 Completed Jobs:
-Job ID  Arrival Time    Finish Time     Turnaround Time
-------- ------------    -----------     ---------------
-1       17              18              1
+Job ID = 3, Arrival Time = 17, Finish Time = 18, Turnaround Time = 1
+
 System Turnaround Time: 1
 
 
-O2:
+**O2:
+
 At Time: 9999
+
 Available Main Memory: 170
+
 Current Devices: 23
-Process running on CPU:
-Job ID  Waiting Time    Time Left
-------- ------------    ---------
--1      2               26
-Hold Queue 1:
-Job ID  Run Time
-------  --------
 
-Hold Queue 2:
-Job ID  Run Time
-------  --------
+Process running on CPU: Job ID = -1, Waiting Time = 2, Time left = 26
 
-Ready Queue:
-Job ID  Run Time        Waiting Time
-------- --------        -------------
-Wait Queue:
-Job ID  Run Time        Waiting Time
-------  ---------       ------------
-Completed Jobs:
-Job ID  Arrival Time    Finish Time     Turnaround Time
-------- ------------    -----------     ---------------
-3       17              18              1
-1       21              22              1
-4       25              26              1
+Completed Jobs: 
+Job ID = 3, Arrival Time = 17, Finish Time = 18, Turnaround Time = 1
+Job ID = 1, Arrival Time = 21, Finish Time = 22, Turnaround Time = 1
+Job ID = 4, Arrival Time = 25, Finish Time = 26, Turnaround Time = 1
+
 System Turnaround Time: 1
 
 

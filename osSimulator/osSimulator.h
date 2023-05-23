@@ -20,12 +20,16 @@ const char EVENT_TYPE_DEVICE_RELEASE = 'L';
 const char EVENT_TYPE_DISPLAY = 'D';
 
 extern int start_time;
+extern int arrival_time;
 extern int current_time;
+extern int system_time;
+extern int request_time;
 extern int system_memory;
 extern int available_memory;
 extern int system_devices;
 extern int available_devices;
 extern int time_quantum;
+
 
 extern SortedLinkedList HoldQueue1;
 extern SortedLinkedList HoldQueue2;

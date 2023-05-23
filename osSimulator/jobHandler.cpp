@@ -16,7 +16,7 @@ Handle jobs as they arrive
 #include <iterator>
 #include <iomanip>
 
-
+//Sorts the hold queue 1 by SJF job scheduling: The job with the shortest run time is at the head, longest at the end.
 void SortedLinkedList::addSorted(Job data, int attribute){
     Node* newNode = new Node;
     newNode->data = data;
@@ -41,7 +41,7 @@ void SortedLinkedList::addSorted(Job data, int attribute){
     }
 }
 
-
+//Sorts the hold queue 2 by FIFO job scheduling: the jobs just take their place in the queue as they arrive 
 void SortedLinkedList::add(Job data){
     Node* newNode = new Node;
     newNode->data = data;
@@ -59,6 +59,7 @@ void SortedLinkedList::add(Job data){
     }
 }
 
+//helper function removes the head of the queue
 Job SortedLinkedList::removeFirst(){
     Node* temp = head;
     head = head->next;
@@ -66,12 +67,12 @@ Job SortedLinkedList::removeFirst(){
     delete temp;
     return data;
 }
-
+//helper function handles empty case
 bool SortedLinkedList::isEmpty(){
     return head == nullptr;
 }
 
-
+//helper function prints information 
 void SortedLinkedList::print(){
     Node* current = head;
     while (current != nullptr){

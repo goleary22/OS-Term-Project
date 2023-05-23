@@ -20,7 +20,10 @@ Acts like a CPU scheduler
 #include <iomanip>
 
 int start_time;
+int arrival_time;
 int current_time;
+int request_time;
+int system_time;
 int system_memory;
 int available_memory;
 int system_devices;
@@ -66,7 +69,8 @@ void processInstruction(std::string instruction) {
 
     if (event_type == EVENT_TYPE_SYSTEM_CONFIGURATION) {
         // line C 9 M=45 S=12 Q=1
-        start_time = stoi(line_data[1]);
+        current_time = stoi(line_data[1]);
+        //start_time = stoi(line_data[1]);
         for (int i = 2; i < line_data.size(); i++) {
             std::vector<std::string> system_configuration_data = split(line_data[i], '=');
             if (system_configuration_data[0] == "M") {
@@ -90,7 +94,7 @@ void processInstruction(std::string instruction) {
 
     else if (event_type == EVENT_TYPE_JOB_ARRIVAL) {
         // A 10 J=1 M=5 S=4 R=3 P=1 
-        current_time = stoi(line_data[1]);
+        arrival_time = stoi(line_data[1]);
         int job_id, priority, memory, serial_devices, run_time;
         for (int i = 2; i < line_data.size(); i++) {
             std::vector<std::string> system_configuration_data = split(line_data[i], '=');
@@ -118,7 +122,7 @@ void processInstruction(std::string instruction) {
 
     else if (event_type == EVENT_TYPE_DEVICE_REQUEST) {
         // Q 10 J=3 D=4 
-        current_time = stoi(line_data[1]);
+        request_time = stoi(line_data[1]);
         int job_id, device;
 
         for (int i = 2; i < line_data.size(); i++) {
@@ -134,7 +138,7 @@ void processInstruction(std::string instruction) {
     }
 
     else if (event_type == EVENT_TYPE_DEVICE_RELEASE) {
-        current_time = stoi(line_data[1]);
+        request_time = stoi(line_data[1]);
         int job_id, device;
 
         for (int i = 2; i < line_data.size(); i++) {
@@ -150,16 +154,15 @@ void processInstruction(std::string instruction) {
     }
 
     else if (event_type == EVENT_TYPE_DISPLAY) {
-        current_time = stoi(line_data[1]);
+        system_time = stoi(line_data[1]);
 
-        // call handleDisplayEvent with all the data
-        handle_display_event(current_time, CPU, HoldQueue1, HoldQueue2, ReadyQueue, jobs, CompleteQueue);
     }
     // increment the current time
     current_time++;
 
 }
 
+//for use in bankers algorithm, finds the total amount of devices
 int getTotalDevices(){
     int totalDevices = 0;
     for (int i = 0; i < ReadyQueue.size(); i++) {
@@ -222,7 +225,7 @@ void processQueues() {
             }
             
              if (CPU.run_time > 0){
-                // move this job to the wait queue
+                // move this job to the wait queue and release devices
                 WaitQueue.push_back(CPU);
                 available_devices += CPU.device_requirement;
                 // set the CPU to the next job in the ready queue
@@ -241,38 +244,16 @@ void processQueues() {
         if (WaitQueue.size() > 0) {
             for (int i = 0; i < WaitQueue.size(); i++) {
                 Process process = WaitQueue[i];
-                //Need to switch this to checking how many devices we have and then comparing if there are enough ad if its safe. 
-                // if the job has not requested a device yet
-                //Getting stuck here? changed from == 0 to > 0 but stuck in infinite loop
-                //i increases each time so it never hits 0
+                //Start of Bankers Algorithm... checks that the processes need for devices is going to be met
                 if (process.device_requirement <= available_devices - getTotalDevices()) {
-                    // find the device in the devices vector
-                    // if the device is available
+                    //if there are enough devices, the process is added to the ready queue and released from the wait queue
                     ReadyQueue.push_back(process);
-                    WaitQueue.erase(WaitQueue.begin()+i)
+                    WaitQueue.erase(WaitQueue.begin()+ i);
                 }
             }
-            /* for (int i = 0; i < WaitQueue.size(); i++){
-                Process process = WaitQueue[i];
-                
-                Banker’s algorithm is executed in FIFO order on each job in the Wait Queue to determine if any 
-                jobs in the Wait Queue can be allocated its last request of devices. If necessary, the entire 
-                Wait Queue is checked to restart as many jobs as possible.
-                n = # of processes, m = # of resource types
-                available = vector of length m, # of avil resources of each type
-                max = n x m matrix, defines maximum demand of each process
-                allocation = n x m matrix, defines number of resources of each type currently allocated to each process
-                need = n x m matrix, indicates the remaining resource need of each process
-                for bankers: you need to have max and allocated resources of each process
-                with this, find the need = max - allocation 
-                int totalAllocated = 0;
-                for(int i = 0; i < WaitQueue.size(); i++){
-                    process.device_requirement[i] = process.
-                }
-            } */
         }
 
-
+        //Creates process from job and adds to the ready queue if enough memory at each hold queue
         if (! HoldQueue1.isEmpty()){
             std::vector<int> job_ids;
             Job current;
@@ -281,7 +262,9 @@ void processQueues() {
             while (std::find(job_ids.begin(), job_ids.end(), current.job_id) != job_ids.end()) {
                 Job current = HoldQueue1.removeFirst();
                 job_ids.push_back(current.job_id);
-                if (current.memory_requirement <= available_memory){ current = HoldQueue1.removeFirst();
+                if (current.memory_requirement <= available_memory){ 
+                    
+                    current = HoldQueue1.removeFirst();
                     Process process = createProcessFromJob(current, available_memory);
                     
                     // put the process in the Ready Queue
@@ -315,7 +298,7 @@ void processQueues() {
             }
         }
 
-        // This doesn't seem to work
+        // Prints the results
         if (ReadyQueue.size() == 0 && HoldQueue1.isEmpty() && HoldQueue2.isEmpty() && WaitQueue.size() == 0 && CPU.pid == -1) {
             // call handleDisplayEvent with all the data
             handle_display_event(current_time, CPU, HoldQueue1, HoldQueue2, ReadyQueue, jobs, CompleteQueue);
@@ -369,13 +352,13 @@ void handle_job_arrival_event(
     if (job.memory_requirement  > available_memory) {
 
         if (job.priority == 1) {
-            // use addSorted to put the job_node in HoldQueue1 for Shortest Job First
+            // use addSorted to put the job_node in HoldQueue1 for Shortest Job First(the job with the shortest run time)
             HoldQueue1.addSorted(job, job.run_time);
             
         }
         // if the job's priority is 2
         if (job.priority == 2) {
-            // put the job in Hold Queue 2 for FIFO
+            // put the job in Hold Queue 2 for FIFO(the jobs are added to the queue as they are brought in )
             HoldQueue2.add(job);
         }
     }

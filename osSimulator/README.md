@@ -13,7 +13,8 @@ build/osSimulator.out input.txt
 
 ## Inputs - input.txt file
 
-i0: 
+**i0: 
+
 C 1 M=200 S=12 Q=4
 A 3 J=1 M=20 S=5 R=10 P=1
 A 4 J=2 M=30 S=2 R=12 P=2
@@ -26,7 +27,8 @@ A 25 J=6 M=20 S=4 R=12 P=2
 D 9999
 
 
-i1: 
+**i1: 
+
 C 1 M=200 S=12 Q=4
 A 2 J=1 M=20 S=5 R=10 P=1
 A 3 J=2 M=30 S=7 R=10 P=2
@@ -38,7 +40,8 @@ D 8
 D 9999
 
 
-i2:
+**i2:
+
 C 1 M=200 S=12 Q=4
 A 3 J=1 M=20 S=5 R=10 P=1
 A 4 J=2 M=30 S=8 R=12 P=2

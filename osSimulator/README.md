@@ -1,4 +1,7 @@
 # OS-Term-Project
+
+By: Grace O'Leary
+
 Design and implement a program that simulates the job scheduling, CPU scheduling, and deadlock avoidance of an operating system.
 
 ## Directions to build and run this program:
